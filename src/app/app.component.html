@@ -1,0 +1,250 @@
+<div class="flex h-screen" [ngClass]="theme === 'dark' ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-800'">
+  <!-- Sidebar -->
+  <div 
+    class="fixed inset-y-0 left-0 z-20 w-72"
+    [ngClass]="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen, 
+              'bg-gray-800': theme === 'dark', 'bg-gray-50': theme === 'light',
+              'border-gray-700': theme === 'dark', 'border-gray-200': theme === 'light'}"
+    class="transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 border-r">
+    <div class="flex flex-col h-full">
+      <!-- New Chat Button -->
+      <div class="p-4">
+        <button 
+          (click)="startNewChat()"
+          class="w-full p-3 rounded-lg flex items-center justify-center space-x-2 transition-all duration-300 hover:shadow-md border"
+          [ngClass]="theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 border-gray-600' : 'bg-white hover:bg-gray-100 border-gray-300'">
+          <i class="fas fa-plus h-5 w-5"></i>
+          <span>New Chat</span>
+        </button>
+      </div>
+      
+      <!-- Chat History -->
+      <div class="px-4 py-2">
+        <h2 class="text-xs uppercase font-semibold tracking-wider"
+            [ngClass]="theme === 'dark' ? 'text-gray-400' : 'text-gray-500'">
+          Recent Conversations
+        </h2>
+      </div>
+      
+      <div class="flex-1 overflow-y-auto px-3 pb-3">
+        <div *ngFor="let chat of chatHistory; let i = index" 
+             class="p-3 rounded-lg mb-2 cursor-pointer transition-all duration-200 animate-fadeIn"
+             [ngClass]="{'bg-gray-700': currentConversation === chat.title && theme === 'dark',
+                       'bg-gray-200': currentConversation === chat.title && theme === 'light',
+                       'hover:bg-gray-700': currentConversation !== chat.title && theme === 'dark',
+                       'hover:bg-gray-200': currentConversation !== chat.title && theme === 'light'}"
+             [style.animation-delay]="i * 50 + 'ms'"
+             (click)="selectChat(chat.title)">
+          <div class="flex justify-between items-start">
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium truncate"
+                 [ngClass]="theme === 'dark' ? 'text-gray-200' : 'text-gray-800'">
+                {{ chat.title }}
+              </p>
+              <p class="text-xs"
+                 [ngClass]="theme === 'dark' ? 'text-gray-400' : 'text-gray-500'">
+                {{ chat.date }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- User Controls -->
+      <div class="p-4 border-t" [ngClass]="theme === 'dark' ? 'border-gray-700' : 'border-gray-200'">
+        <div class="p-3 rounded-lg flex justify-between items-center"
+             [ngClass]="theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white font-medium">
+              U
+            </div>
+            <span class="text-sm font-medium">User</span>
+          </div>
+          <button 
+            (click)="toggleTheme()" 
+            class="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+            [ngClass]="theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'">
+            <i *ngIf="theme === 'dark'" class="fas fa-sun h-4 w-4"></i>
+            <i *ngIf="theme === 'light'" class="fas fa-moon h-4 w-4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col relative overflow-hidden">
+    <!-- Header -->
+    <header class="flex items-center justify-between p-4 border-b transition-colors duration-300"
+            [ngClass]="theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'">
+      <div class="flex items-center">
+        <button 
+          (click)="toggleSidebar()" 
+          class="md:hidden mr-4 transition-transform duration-200 hover:scale-110">
+          <i class="fas fa-bars h-5 w-5"></i>
+        </button>
+        <h1 class="text-lg font-medium">
+          {{ currentConversation }}
+        </h1>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button class="p-2 rounded-lg transition-colors duration-200"
+                [ngClass]="theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-100'">
+          <i class="fas fa-share-alt h-5 w-5"></i>
+        </button>
+        <button class="p-2 rounded-lg transition-colors duration-200"
+                [ngClass]="theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-100'">
+          <i class="fas fa-bookmark h-5 w-5"></i>
+        </button>
+        <button class="p-2 rounded-lg transition-colors duration-200"
+                [ngClass]="theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-100'">
+          <i class="fas fa-download h-5 w-5"></i>
+        </button>
+      </div>
+    </header>
+    
+    <!-- Chat Area with transitions -->
+    <div #messagesContainer
+      class="flex-1 overflow-y-auto p-4 transition-all duration-300"
+      [ngClass]="{'opacity-0': newChatTransition, 'opacity-100': !newChatTransition,
+                'bg-gray-900': theme === 'dark', 'bg-gray-50': theme === 'light'}"
+      [style.background-image]="theme === 'dark' 
+        ? 'radial-gradient(circle at 10% 20%, rgba(21, 21, 21, 0.8) 0%, rgba(10, 10, 10, 0.8) 90.1%)' 
+        : 'radial-gradient(circle at 10% 20%, rgba(245, 245, 245, 0.8) 0%, rgba(240, 240, 240, 0.8) 90.1%)'">
+      <div class="max-w-3xl mx-auto space-y-6">
+        <div *ngIf="showSuggestions" 
+             class="p-4 rounded-xl backdrop-blur shadow-lg animate-rise mb-8"
+             [ngClass]="theme === 'dark' ? 'bg-gray-800/70 text-white' : 'bg-white/70 text-gray-800'">
+          <h2 class="text-lg font-medium mb-3 flex items-center">
+            <i class="fas fa-sparkles h-5 w-5 mr-2 text-blue-500"></i>
+            I can help with...
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <button *ngFor="let suggestion of suggestions; let i = index"
+              (click)="handleSuggestionClick(suggestion)"
+              class="p-3 rounded-lg text-left transition-all duration-300 group hover:scale-102 border"
+              [ngClass]="theme === 'dark' 
+                ? 'bg-gray-700/80 hover:bg-gray-600 border-gray-600' 
+                : 'bg-gray-100/80 hover:bg-gray-200 border-gray-300'"
+              [style.animation-delay]="i * 100 + 'ms'">
+              <span>{{ suggestion }}</span>
+            </button>
+          </div>
+        </div>
+        
+        <div *ngFor="let message of messages" 
+             class="flex"
+             [ngClass]="{'justify-end': message.sender === 'user', 'justify-start': message.sender === 'ai'}">
+          <div 
+            class="rounded-xl p-4 shadow-md"
+            [ngClass]="{
+              'ml-10 text-white': message.sender === 'user',
+              'mr-10': message.sender === 'ai',
+              'bg-blue-600': message.sender === 'user' && theme === 'dark', 
+              'bg-blue-500': message.sender === 'user' && theme === 'light',
+              'bg-gray-800': message.sender === 'ai' && theme === 'dark',
+              'bg-white': message.sender === 'ai' && theme === 'light',
+              'message-fade-in': !message.animationClass,
+              'message-slide-in': message.animationClass === 'message-slide-in'
+            }">
+            <div class="flex space-x-2 items-center mb-2">
+              <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs"
+                  [ngClass]="{
+                    'bg-blue-400 text-white': message.sender === 'user',
+                    'bg-indigo-600 text-white': message.sender === 'ai' && theme === 'dark',
+                    'bg-indigo-100 text-indigo-600': message.sender === 'ai' && theme === 'light'
+                  }">
+                {{ message.sender === 'user' ? 'U' : 'AI' }}
+              </div>
+              <span class="text-sm font-medium"
+                    [ngClass]="{
+                      'text-blue-100': message.sender === 'user',
+                      'text-gray-300': message.sender === 'ai' && theme === 'dark',
+                      'text-gray-700': message.sender === 'ai' && theme === 'light'
+                    }">
+                {{ message.sender === 'user' ? 'You' : 'Assistant' }}
+              </span>
+              <span class="text-xs ml-auto"
+                    [ngClass]="{
+                      'text-blue-200': message.sender === 'user',
+                      'text-gray-500': message.sender === 'ai' && theme === 'dark',
+                      'text-gray-400': message.sender === 'ai' && theme === 'light'
+                    }">
+                {{ message.time }}
+              </span>
+            </div>
+            
+            <div class="prose max-w-none"
+                 [ngClass]="{'prose-invert': theme === 'dark', 'prose-sm': true, 'thinking-animation': message.thinking}">
+              <div [innerHTML]="message.text | formatMessage"></div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div *ngIf="isThinking" class="flex justify-start">
+          <div class="rounded-xl p-4 shadow-md thinking-container"
+               [ngClass]="theme === 'dark' ? 'bg-gray-800' : 'bg-white'">
+            <div class="flex space-x-2 items-center mb-2">
+              <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs"
+                  [ngClass]="theme === 'dark' ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'">
+                AI
+              </div>
+              <span class="text-sm font-medium"
+                    [ngClass]="theme === 'dark' ? 'text-gray-300' : 'text-gray-700'">
+                Assistant
+              </span>
+            </div>
+            <div class="thinking-dots">
+              <span class="dot" [style.animation-delay]="'0ms'"></span>
+              <span class="dot" [style.animation-delay]="'200ms'"></span>
+              <span class="dot" [style.animation-delay]="'400ms'"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Input Area with Floating Design -->
+    <div class="relative p-4 transition-colors duration-300"
+         [ngClass]="theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'">
+      <div class="max-w-3xl mx-auto">
+        <div class="relative rounded-xl transition-opacity duration-300"
+             [ngClass]="{'opacity-50 pointer-events-none': isProcessing, 'opacity-100': !isProcessing}">
+          <textarea
+            placeholder="Ask me anything..."
+            class="w-full p-4 pr-16 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border transition-colors duration-300"
+            [ngClass]="theme === 'dark' 
+              ? 'bg-gray-800 text-white border-gray-700' 
+              : 'bg-white text-gray-800 border-gray-200'"
+            rows="1"
+            [(ngModel)]="newMessage"
+            (keydown)="handleKeyPress($event)"
+            style="min-height: 60px; max-height: 200px"
+            [disabled]="isProcessing">
+          </textarea>
+          <button
+            (click)="handleSendMessage()"
+            [disabled]="!newMessage.trim() || isProcessing"
+            class="absolute right-3 bottom-3 p-2 rounded-lg transition-all duration-300"
+            [ngClass]="newMessage.trim() && !isProcessing
+              ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg transform hover:scale-105' 
+              : theme === 'dark' ? 'bg-gray-700 text-gray-500' : 'bg-gray-200 text-gray-400'">
+            <i class="fas fa-paper-plane h-5 w-5"></i>
+          </button>
+        </div>
+        
+        <div class="text-xs text-center mt-2"
+             [ngClass]="theme === 'dark' ? 'text-gray-500' : 'text-gray-400'">
+          AI Assistant may produce inaccurate information and has limited knowledge.
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Overlay for mobile sidebar -->
+  <div *ngIf="sidebarOpen" 
+       class="md:hidden fixed inset-0 bg-black bg-opacity-50 z-10 backdrop-blur-sm transition-opacity duration-300"
+       (click)="toggleSidebar()">
+  </div>
+</div>
