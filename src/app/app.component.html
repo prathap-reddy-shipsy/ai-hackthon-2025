@@ -1,7 +1,7 @@
 <div class="flex h-screen" [ngClass]="theme === 'dark' ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-800'">
   <!-- Sidebar -->
   <div 
-    class="fixed inset-y-0 left-0 z-20 w-72"
+    class="fixed inset-y-0 left-0 z-20 w-72" style="width: 220px;"
     [ngClass]="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen, 
               'bg-gray-800': theme === 'dark', 'bg-gray-50': theme === 'light',
               'border-gray-700': theme === 'dark', 'border-gray-200': theme === 'light'}"
@@ -71,7 +71,7 @@
   </div>
   
   <!-- Main Content -->
-  <div class="flex-1 flex flex-col relative overflow-hidden">
+  <div class="flex-1 flex-col relative overflow-hidden">
     <!-- Header -->
     <header class="flex items-center justify-between p-3 border-b transition-colors duration-300"
             [ngClass]="theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'">
@@ -114,7 +114,7 @@
     </header>
     
     <!-- Chat Area with transitions -->
-    <div #messagesContainer
+    <div #messagesContainer style="height: calc(100vh - 170px);"
       class="flex-1 overflow-y-auto p-3 transition-all duration-300"
       [ngClass]="{'opacity-0': newChatTransition, 'opacity-100': !newChatTransition,
                 'bg-gray-900': theme === 'dark', 'bg-gray-50': theme === 'light'}"
