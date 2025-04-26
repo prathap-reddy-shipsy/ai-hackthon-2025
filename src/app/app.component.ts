@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { FormatMessagePipe } from '../format-message.pipe';
 import { HttpClient } from '@angular/common/http';
 import { ChartComponent } from './components/chart/chart.component';
+import { catchError } from 'rxjs';
 
 interface Message {
   id: number;
@@ -12,7 +13,8 @@ interface Message {
   thinking?: boolean;
   time: string;
   animationClass?: string;
-  graph?: any
+  graph?: any,
+  graphView?: boolean,
 }
 
 interface ChatHistory {
@@ -30,6 +32,7 @@ interface ChatHistory {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewChecked {
+  @ViewChild('chatData') private chatDataContainer!: ElementRef;
   theme: 'light' | 'dark' = 'light';
   messages: Message[] = [
     { 
@@ -48,7 +51,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   currentConversation = "Current Conversation";
   newChatTransition = false;
 
-  suggestions: string[] = ["How many Sku Categories are there can you plot of each how many are there as well", "Write a short story about space exploration", "Explain quantum computing in simple terms", "Give me ideas for a presentation on climate change"];
+  suggestions: string[] = ["How many Sku Categories are there can you plot of each how many are there as well", "How many Sku Categories are there can you plot a pie chart of each how many are there as well", "Explain quantum computing in simple terms", "Give me ideas for a presentation on climate change"];
 
   chatHistory: ChatHistory[] = [
     { id: 1, title: "Current Conversation", date: "Today" },
@@ -98,17 +101,18 @@ export class AppComponent implements OnInit, AfterViewChecked {
     };
     
     this.messages = [...this.messages, userMessage];
+    this.showSuggestions = false;
+    this.scrollDataDown();
     this.newMessage = '';
     this.isProcessing = true;
     
     // After a brief delay, show thinking indicator
     setTimeout(() => {
       this.isThinking = true;
-      
+      this.scrollDataDown();
       // After another delay, show the response
       setTimeout(() => {
-       
-         this.http.post('http://172.16.2.90:8000/query', { question: userMessage.text })
+         this.http.post('http://172.16.2.90:8000/query', { question: userMessage.text }).pipe(catchError(this.handleError))
           .subscribe((response: any) => {
             console.log('Response from server:', response);
             this.isThinking = false;
@@ -118,26 +122,39 @@ export class AppComponent implements OnInit, AfterViewChecked {
               text: response?.response?.answer || '',
               sender: 'ai',
               time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-              animationClass: 'message-slide-in'
+              animationClass: 'message-slide-in',
             };
             let graphData: any = {};
-            if (response?.response?.formatted_results?.type === 'bar'){
+            if (response?.response?.formatted_results?.type === 'bar' || response?.response?.formatted_results?.type === 'pie') {
+              const color = this.dynamicColors();
               graphData = {
                 id: this.messages.length + 3,
-                // text: 'Here is the graph you requested:',
                 sender: 'ai',
                 time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
                 animationClass: 'message-slide-in',
                 graph: {
-                  data: [{...response?.response?.formatted_results}],
+                  data: [{...response?.response?.formatted_results, color}],
                   label: response?.response?.formatted_results?.label,
-                }
-              }
+                  },
+                graphView: true              }
             }
-            this.messages = [...this.messages, aiMessage, graphData];
+            this.messages = [...this.messages, aiMessage];
+            Object.keys(graphData)?.length > 0 && this.messages.push(graphData);
+            this.scrollDataDown();
             this.showSuggestions = false;
           }, error => {
-            console.error('Error sending message', error);
+            const errorMessage: Message = {
+              id: this.messages.length + 2,
+              text: 'Sorry, I encountered an error while processing your request.',
+              sender: 'ai',
+              time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+              animationClass: 'message-slide-in',
+            };
+            this.messages = [...this.messages, errorMessage];
+            this.scrollDataDown();
+            this.isProcessing = false;
+            this.isThinking = false;
+            console.log('Error sending message', error);
           });
       }, 200);
     }, 500);
@@ -187,5 +204,22 @@ export class AppComponent implements OnInit, AfterViewChecked {
     // Process markdown-like formatting
     // In Angular, we'll handle this with a pipe
     return text;
+  }
+  dynamicColors() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgb(${r},${g},${b})`;
+  }
+  scrollDataDown(){
+    setTimeout(() => {
+      const element = this.chatDataContainer?.nativeElement;
+      if (element && element.lastElementChild) {
+        element.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }
+    }, 200)
+  }
+  handleError(error: any) {
+    return error;
   }
 }
