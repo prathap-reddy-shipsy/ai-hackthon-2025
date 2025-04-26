@@ -30,7 +30,7 @@ export class FormatMessagePipe implements PipeTransform {
       }
       // Regular paragraph
       else {
-        formatted += line ? `<p class="mb-2">${line}</p>` : '<br>';
+        formatted += line ? `<p class="mb-0">${line}</p>` : '<br>';
       }
     });
     

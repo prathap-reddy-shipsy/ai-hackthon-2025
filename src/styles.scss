@@ -291,20 +291,64 @@ body{
   transform: translateY(-1px);
 }
 
-.suggestion-btn:nth-child(2) {
-  background: linear-gradient(to right, rgba(237, 233, 254, 0.5), rgba(245, 208, 254, 0.5));
-  border-color: #e9d5ff;
+// .suggestion-btn:nth-child(2) {
+//   background: linear-gradient(to right, rgba(237, 233, 254, 0.5), rgba(245, 208, 254, 0.5));
+//   border-color: #e9d5ff;
+// }
+
+// .suggestion-btn:nth-child(2):hover {
+//   background: linear-gradient(to right, rgba(237, 233, 254, 0.8), rgba(245, 208, 254, 0.8));
+// }
+
+// .suggestion-btn:nth-child(3) {
+//   background: linear-gradient(to right, rgba(209, 250, 229, 0.5), rgba(167, 243, 208, 0.5));
+//   border-color: #a7f3d0;
+// }
+
+// .suggestion-btn:nth-child(3):hover {
+//   background: linear-gradient(to right, rgba(209, 250, 229, 0.8), rgba(167, 243, 208, 0.8));
+// }
+.chat-loader{
+  border-radius: 4px;
+  width: 52px;
+  margin-left: 12px;
+  .dot-flashing {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 5px;
+    background-color: #8b5cf6;
+    color: #8b5cf6;
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 0.5s;
+    &::before, &::after{
+      content: "";
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      width: 8px;
+      height: 8px;
+      border-radius: 5px;
+      background-color: #8b5cf6;
+      color: #8b5cf6;
+      animation: dot-flashing 1s infinite alternate;
+    }
+    &::before{
+      left: -12px;
+      animation-delay: 0s;
+    }
+    &::after{
+      left: 12px;
+      animation-delay: 1s;
+    }
+  }
 }
 
-.suggestion-btn:nth-child(2):hover {
-  background: linear-gradient(to right, rgba(237, 233, 254, 0.8), rgba(245, 208, 254, 0.8));
-}
-
-.suggestion-btn:nth-child(3) {
-  background: linear-gradient(to right, rgba(209, 250, 229, 0.5), rgba(167, 243, 208, 0.5));
-  border-color: #a7f3d0;
-}
-
-.suggestion-btn:nth-child(3):hover {
-  background: linear-gradient(to right, rgba(209, 250, 229, 0.8), rgba(167, 243, 208, 0.8));
+@keyframes dot-flashing {
+  0% {
+    background-color: #8b5cf6;
+  }
+  50%, 100% {
+    background-color: rgba(13, 92, 246, 0.2);
+  }
 }

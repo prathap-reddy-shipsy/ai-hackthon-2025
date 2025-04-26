@@ -126,7 +126,9 @@
              class="p-3 rounded-xl backdrop-blur shadow-lg animate-rise mb-8"
              [ngClass]="theme === 'dark' ? 'bg-gray-800/70 text-white' : 'bg-white/70 text-gray-800'">
           <h2 class="text-lg font-medium mb-3 flex items-center">
-            <i class="fas fa-sparkles h-5 w-5 mr-2 text-blue-500"></i>
+            <svg style="width: 20px; height: 20px; color: #f59e0b; margin-right: 8px" class="icon sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3l1.661 4.887 5.05-2.137-2.137 5.05L21 12l-4.887 1.661 2.137 5.05-5.05-2.137L12 21l-1.661-4.887-5.05 2.137 2.137-5.05L3 12l4.887-1.661-2.137-5.05 5.05 2.137L12 3z"></path>
+          </svg>
             I can help with...
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -142,11 +144,11 @@
           </div>
         </div>
         
-        <div *ngFor="let message of messages" style="width: 100%;" 
+        <div *ngFor="let message of messages" [ngStyle]="{'w-full': message.graph}"
              class="flex"
              [ngClass]="{'justify-end': message.sender === 'user', 'justify-start': message.sender === 'ai'}">
           <div 
-            class="rounded-xl p-2 shadow-md" style="width: 100%;"
+            class="rounded-xl p-2 shadow-md" [ngStyle]="{'w-full': message.graph}"
             [ngClass]="{
               'ml-10 text-white': message.sender === 'user',
               'mr-10': message.sender === 'ai',
@@ -194,7 +196,8 @@
                 Assistant
               </span>
             </div>
-            <div class="thinking-dots">
+            <div class="chat-loader flex align-items-center justify-content-center"><div class="dot-flashing"></div></div>
+            <div class="thinking-dots" style="display: none;">
               <span class="dot" [style.animation-delay]="'0ms'"></span>
               <span class="dot" [style.animation-delay]="'200ms'"></span>
               <span class="dot" [style.animation-delay]="'400ms'"></span>
