@@ -6,6 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { ChartComponent } from './components/chart/chart.component';
 import { catchError } from 'rxjs';
 import { DrawerModule } from 'primeng/drawer';
+import {MatDrawer, MatSidenavModule} from '@angular/material/sidenav';
+
 
 
 interface Message {
@@ -29,13 +31,14 @@ interface ChatHistory {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, FormatMessagePipe, ChartComponent, DrawerModule],
+  imports: [CommonModule, FormsModule, FormatMessagePipe, ChartComponent, DrawerModule, MatSidenavModule],
   providers: [HttpClient],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, AfterViewChecked {
   @ViewChild('chatData') private chatDataContainer!: ElementRef;
+  @ViewChild('drawer') private drawer!: MatDrawer;
   theme: 'light' | 'dark' = 'light';
   extraInfo: any = {
     show: false
@@ -57,7 +60,12 @@ export class AppComponent implements OnInit, AfterViewChecked {
   currentConversation = "Current Conversation";
   newChatTransition = false;
 
-  suggestions: string[] = ["How many Sku Categories are there can you plot of each how many are there as well", "How many Sku Categories are there can you plot a pie chart of each how many are there as well", "Explain quantum computing in simple terms", "Give me ideas for a presentation on climate change"];
+  suggestions: string[] = [
+    "How much inventrory is on hold?",
+    "Is batch B456 available in inventory?",
+    "Can you list down Stock quantity Count based on sku category check in stock detail?",
+    "What is the current stock quantity for sku code ASD1 and batch no are FG1, test1"
+  ];
 
   chatHistory: ChatHistory[] = [
     { id: 1, title: "Current Conversation", date: "Today" },
@@ -98,6 +106,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
   handleSendMessage(): void {
     if (this.newMessage.trim() === '') return;
+    this.drawer.close();
     const userMessage: Message = {
       id: this.messages.length + 1,
       text: this.newMessage,
@@ -233,8 +242,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
   showExtras(message: Message) {
     console.log(message);
+    this.drawer.open();
     this.extraInfo = {
-      show: true,
       data: message?.data || {}
     }
   }

@@ -115,100 +115,113 @@
     </header>
     
     <!-- Chat Area with transitions -->
-    <div #messagesContainer
-      class="flex-1 overflow-y-auto p-3 transition-all duration-300 flex" style="justify-content: center;"
-      [ngClass]="{'opacity-0': newChatTransition, 'opacity-100': !newChatTransition,
-                'bg-gray-900': theme === 'dark', 'bg-gray-50': theme === 'light'}"
-      [style.background-image]="theme === 'dark' 
-        ? 'radial-gradient(circle at 10% 20%, rgba(21, 21, 21, 0.8) 0%, rgba(10, 10, 10, 0.8) 90.1%)' 
-        : 'radial-gradient(circle at 10% 20%, rgba(245, 245, 245, 0.8) 0%, rgba(240, 240, 240, 0.8) 90.1%)'">
-      <div class="space-y-6 max-w-3xl min-w-3xl mx-auto" style="position: relative; height: calc(100vh - 170px); overflow-y: auto; scroll-behavior: smooth;" #chatData>
-        
-        <div *ngFor="let message of messages"
-             class="flex"
-             [ngClass]="{'justify-end': message.sender === 'user', 'justify-start': message.sender === 'ai', 'w-full': message.graphView}">
-          <div 
-            class="rounded-xl p-2 shadow-md"
-            [ngClass]="{
-              'w-full': message.graphView,
-              'ml-10 text-white': message.sender === 'user',
-              'mr-10': message.sender === 'ai',
-              'bg-blue-600': message.sender === 'user' && theme === 'dark', 
-              'bg-blue-500': message.sender === 'user' && theme === 'light',
-              'bg-gray-800': message.sender === 'ai' && theme === 'dark',
-              'bg-white': message.sender === 'ai' && theme === 'light',
-              'message-fade-in': !message.animationClass,
-              'message-slide-in': message.animationClass === 'message-slide-in'
-            }">
-            <div class="flex space-x-2 items-center mb-2">
-              <span class="text-sm font-medium"
-                    [ngClass]="{
-                      'text-blue-100': message.sender === 'user',
-                      'text-gray-300': message.sender === 'ai' && theme === 'dark',
-                      'text-gray-700': message.sender === 'ai' && theme === 'light'
-                    }">
-                {{ message.sender === 'user' ? 'You' : 'Assistant' }}
-              </span>
-              <span class="text-xs ml-auto"
-                    [ngClass]="{
-                      'text-blue-200': message.sender === 'user',
-                      'text-gray-500': message.sender === 'ai' && theme === 'dark',
-                      'text-gray-400': message.sender === 'ai' && theme === 'light'
-                    }">
-                {{ message.time }}
-              </span>
+    <mat-drawer-container class="example-container" autosize >
+      <mat-drawer #drawer class="example-sidenav" mode="side" position="end">
+        <div class="w-full p-3">
+          <div><strong>Root Table: </strong> <p style="margin: 6px 0; padding: 10px; background: #f1f1f1; border-radius: 4px;">{{extraInfo?.data?.root_table}}</p></div>
+          <div style="margin-top: 10px; line-height: 18px;"><strong>SQL Query: </strong> <p style="margin: 6px 0; line-height: 18px; padding: 10px; background: #f1f1f1; border-radius: 4px;">{{extraInfo?.data?.sql_query}}</div>
+          <div style="margin-top: 10px; line-height: 18px;"><strong>Visualization Reason: </strong> <p style="margin: 6px 0; line-height: 18px;">{{extraInfo?.data?.visualization_reason}}</div>
+        </div>
+      </mat-drawer>
+    
+      <div class="example-sidenav-content">
+        <div #messagesContainer
+          class="flex-1 overflow-y-auto p-3 transition-all duration-300 flex" style="justify-content: center;"
+          [ngClass]="{'opacity-0': newChatTransition, 'opacity-100': !newChatTransition,
+                    'bg-gray-900': theme === 'dark', 'bg-gray-50': theme === 'light'}"
+          [style.background-image]="theme === 'dark' 
+            ? 'radial-gradient(circle at 10% 20%, rgba(21, 21, 21, 0.8) 0%, rgba(10, 10, 10, 0.8) 90.1%)' 
+            : 'radial-gradient(circle at 10% 20%, rgba(245, 245, 245, 0.8) 0%, rgba(240, 240, 240, 0.8) 90.1%)'">
+          <div class="space-y-6 max-w-3xl min-w-3xl mx-auto" style="position: relative; height: calc(100vh - 170px); overflow-y: auto; scroll-behavior: smooth;" #chatData>
+            <div *ngFor="let message of messages"
+                class="flex"
+                [ngClass]="{'justify-end': message.sender === 'user', 'justify-start': message.sender === 'ai', 'w-full': message.graphView}">
+              <div 
+                class="rounded-xl p-2 shadow-md"
+                [ngClass]="{
+                  'w-full': message.graphView,
+                  'ml-10 text-white': message.sender === 'user',
+                  'mr-10': message.sender === 'ai',
+                  'bg-blue-600': message.sender === 'user' && theme === 'dark', 
+                  'bg-blue-500': message.sender === 'user' && theme === 'light',
+                  'bg-gray-800': message.sender === 'ai' && theme === 'dark',
+                  'bg-white': message.sender === 'ai' && theme === 'light',
+                  'message-fade-in': !message.animationClass,
+                  'message-slide-in': message.animationClass === 'message-slide-in'
+                }">
+                <div class="flex space-x-2 items-center mb-2">
+                  <span class="text-sm font-medium"
+                        [ngClass]="{
+                          'text-blue-100': message.sender === 'user',
+                          'text-gray-300': message.sender === 'ai' && theme === 'dark',
+                          'text-gray-700': message.sender === 'ai' && theme === 'light'
+                        }">
+                    {{ message.sender === 'user' ? 'You' : 'Assistant' }}
+                  </span>
+                  <span class="text-xs ml-auto"
+                        [ngClass]="{
+                          'text-blue-200': message.sender === 'user',
+                          'text-gray-500': message.sender === 'ai' && theme === 'dark',
+                          'text-gray-400': message.sender === 'ai' && theme === 'light'
+                        }">
+                    {{ message.time }}
+                  </span>
+                </div>
+                
+                <div class="prose max-w-none"
+                    [ngClass]="{'prose-invert': theme === 'dark', 'prose-sm': true, 'thinking-animation': message.thinking}">
+                  <div *ngIf="message.text" [innerHTML]="message.text | formatMessage" style="line-height: 1.8;"></div>
+                  <p style="text-align: right; color: #4a6cf7; text-decoration: underline; cursor: pointer;" (click)="showExtras(message)" *ngIf="message.text && message.sender === 'ai' && message.id !== 1">More...</p>
+                  <app-chart *ngIf="message.graph" [graphData]="message.graph"></app-chart>
+                </div>
+                
+              </div>
             </div>
             
-            <div class="prose max-w-none"
-                 [ngClass]="{'prose-invert': theme === 'dark', 'prose-sm': true, 'thinking-animation': message.thinking}">
-              <div *ngIf="message.text" [innerHTML]="message.text | formatMessage" style="line-height: 1.8;"></div>
-              <p style="text-align: right; color: #4a6cf7; text-decoration: underline; cursor: pointer;" (click)="showExtras(message)" *ngIf="message.text && message.sender === 'ai' && message.id !== 1">More...</p>
-              <app-chart *ngIf="message.graph" [graphData]="message.graph"></app-chart>
+            <div *ngIf="isThinking" class="flex justify-start">
+              <div class="rounded-xl p-2 shadow-md thinking-container"
+                  [ngClass]="theme === 'dark' ? 'bg-gray-800' : 'bg-white'">
+                <div class="flex space-x-2 items-center mb-2">
+                  <span class="text-sm font-medium"
+                        [ngClass]="theme === 'dark' ? 'text-gray-300' : 'text-gray-700'">
+                    Assistant
+                  </span>
+                </div>
+                <div class="chat-loader flex align-items-center justify-content-center"><div class="dot-flashing"></div></div>
+                <div class="thinking-dots" style="display: none;">
+                  <span class="dot" [style.animation-delay]="'0ms'"></span>
+                  <span class="dot" [style.animation-delay]="'200ms'"></span>
+                  <span class="dot" [style.animation-delay]="'400ms'"></span>
+                </div>
+              </div>
             </div>
-            
-          </div>
-        </div>
-        
-        <div *ngIf="isThinking" class="flex justify-start">
-          <div class="rounded-xl p-2 shadow-md thinking-container"
-               [ngClass]="theme === 'dark' ? 'bg-gray-800' : 'bg-white'">
-            <div class="flex space-x-2 items-center mb-2">
-              <span class="text-sm font-medium"
-                    [ngClass]="theme === 'dark' ? 'text-gray-300' : 'text-gray-700'">
-                Assistant
-              </span>
+            <div *ngIf="showSuggestions" style="position: absolute; bottom: 0px; border: 1px solid #ebebeb;"
+                class="p-3 rounded-xl backdrop-blur shadow-lg animate-rise mb-2"
+                [ngClass]="theme === 'dark' ? 'bg-gray-800/70 text-white' : 'bg-white/70 text-gray-800'">
+              <h2 class="text-lg font-medium mb-3 flex items-center">
+                <svg style="width: 20px; height: 20px; color: #f59e0b; margin-right: 8px" class="icon sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3l1.661 4.887 5.05-2.137-2.137 5.05L21 12l-4.887 1.661 2.137 5.05-5.05-2.137L12 21l-1.661-4.887-5.05 2.137 2.137-5.05L3 12l4.887-1.661-2.137-5.05 5.05 2.137L12 3z"></path>
+              </svg>
+                I can help with...
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button *ngFor="let suggestion of suggestions; let i = index" style="border-radius: 30px; padding: 10px 20px;"
+                  (click)="handleSuggestionClick(suggestion)"
+                  class="p-3 text-left transition-all duration-300 group hover:scale-102 border suggestion-btn"
+                  [ngClass]="theme === 'dark' 
+                    ? 'bg-gray-700 hover:bg-gray-600 border-gray-600' 
+                    : 'bg-gray-100 hover:bg-gray-200 border-gray-300'"
+                  [style.animation-delay]="i * 100 + 'ms'">
+                  <span>{{ suggestion }}</span>
+                </button>
+              </div>
             </div>
-            <div class="chat-loader flex align-items-center justify-content-center"><div class="dot-flashing"></div></div>
-            <div class="thinking-dots" style="display: none;">
-              <span class="dot" [style.animation-delay]="'0ms'"></span>
-              <span class="dot" [style.animation-delay]="'200ms'"></span>
-              <span class="dot" [style.animation-delay]="'400ms'"></span>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="showSuggestions" style="position: absolute; bottom: 0px;"
-             class="p-3 rounded-xl backdrop-blur shadow-lg animate-rise mb-2"
-             [ngClass]="theme === 'dark' ? 'bg-gray-800/70 text-white' : 'bg-white/70 text-gray-800'">
-          <h2 class="text-lg font-medium mb-3 flex items-center">
-            <svg style="width: 20px; height: 20px; color: #f59e0b; margin-right: 8px" class="icon sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 3l1.661 4.887 5.05-2.137-2.137 5.05L21 12l-4.887 1.661 2.137 5.05-5.05-2.137L12 21l-1.661-4.887-5.05 2.137 2.137-5.05L3 12l4.887-1.661-2.137-5.05 5.05 2.137L12 3z"></path>
-          </svg>
-            I can help with...
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <button *ngFor="let suggestion of suggestions; let i = index" style="border-radius: 30px; padding: 10px 20px;"
-              (click)="handleSuggestionClick(suggestion)"
-              class="p-3 text-left transition-all duration-300 group hover:scale-102 border suggestion-btn"
-              [ngClass]="theme === 'dark' 
-                ? 'bg-gray-700 hover:bg-gray-600 border-gray-600' 
-                : 'bg-gray-100 hover:bg-gray-200 border-gray-300'"
-              [style.animation-delay]="i * 100 + 'ms'">
-              <span>{{ suggestion }}</span>
-            </button>
           </div>
         </div>
       </div>
-    </div>
+    
+    </mat-drawer-container>
+    
     
     <!-- Input Area with Floating Design -->
     <div class="relative p-3 transition-colors duration-300"
