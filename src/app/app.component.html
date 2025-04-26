@@ -162,6 +162,7 @@
             <div class="prose max-w-none"
                  [ngClass]="{'prose-invert': theme === 'dark', 'prose-sm': true, 'thinking-animation': message.thinking}">
               <div *ngIf="message.text" [innerHTML]="message.text | formatMessage" style="line-height: 1.8;"></div>
+              <p style="text-align: right; color: #4a6cf7; text-decoration: underline; cursor: pointer;" (click)="showExtras(message)" *ngIf="message.text && message.sender === 'ai' && message.id !== 1">More...</p>
               <app-chart *ngIf="message.graph" [graphData]="message.graph"></app-chart>
             </div>
             
@@ -252,3 +253,10 @@
        (click)="toggleSidebar()">
   </div>
 </div>
+<p-drawer header="More Information" [(visible)]="extraInfo.show" position="right">
+    <div class="w-full">
+      <p><strong>Root Table: </strong> <p style="margin: 6px 0;">{{extraInfo?.data?.root_table}}</p>
+      <p style="margin-top: 10px; line-height: 18px;"><strong>SQL Query: </strong> <p style="margin: 6px 0; line-height: 18px;">{{extraInfo?.data?.sql_query}}</p>
+      <p style="margin-top: 10px; line-height: 18px;"><strong>Visualization Reason: </strong> <p style="margin: 6px 0; line-height: 18px;">{{extraInfo?.data?.visualization_reason}}</p>
+    </div>
+</p-drawer>

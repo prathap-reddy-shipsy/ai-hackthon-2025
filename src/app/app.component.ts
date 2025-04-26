@@ -5,6 +5,8 @@ import { FormatMessagePipe } from '../format-message.pipe';
 import { HttpClient } from '@angular/common/http';
 import { ChartComponent } from './components/chart/chart.component';
 import { catchError } from 'rxjs';
+import { DrawerModule } from 'primeng/drawer';
+
 
 interface Message {
   id: number;
@@ -15,6 +17,7 @@ interface Message {
   animationClass?: string;
   graph?: any,
   graphView?: boolean,
+  data?: any
 }
 
 interface ChatHistory {
@@ -26,7 +29,7 @@ interface ChatHistory {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, FormatMessagePipe, ChartComponent],
+  imports: [CommonModule, FormsModule, FormatMessagePipe, ChartComponent, DrawerModule],
   providers: [HttpClient],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
@@ -34,6 +37,9 @@ interface ChatHistory {
 export class AppComponent implements OnInit, AfterViewChecked {
   @ViewChild('chatData') private chatDataContainer!: ElementRef;
   theme: 'light' | 'dark' = 'light';
+  extraInfo: any = {
+    show: false
+  }
   messages: Message[] = [
     { 
       id: 1, 
@@ -123,6 +129,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
               sender: 'ai',
               time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
               animationClass: 'message-slide-in',
+              data: response?.response || {},
             };
             let graphData: any = {};
             if (response?.response?.formatted_results?.type === 'bar' || response?.response?.formatted_results?.type === 'pie') {
@@ -136,7 +143,9 @@ export class AppComponent implements OnInit, AfterViewChecked {
                   data: [{...response?.response?.formatted_results, color}],
                   label: response?.response?.formatted_results?.label,
                   },
-                graphView: true              }
+                graphView: true,
+                data: response?.response || {},           
+              }
             }
             this.messages = [...this.messages, aiMessage];
             Object.keys(graphData)?.length > 0 && this.messages.push(graphData);
@@ -221,5 +230,12 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
   handleError(error: any) {
     return error;
+  }
+  showExtras(message: Message) {
+    console.log(message);
+    this.extraInfo = {
+      show: true,
+      data: message?.data || {}
+    }
   }
 }
