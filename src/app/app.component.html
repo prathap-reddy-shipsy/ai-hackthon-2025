@@ -8,11 +8,11 @@
     class="transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 border-r">
     <div class="flex flex-col h-full">
       <!-- New Chat Button -->
-      <div class="p-4">
+      <div class="p-3">
         <button 
           (click)="startNewChat()"
           class="w-full p-3 rounded-lg flex items-center justify-center space-x-2 transition-all duration-300 hover:shadow-md border"
-          [ngClass]="theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 border-gray-600' : 'bg-white hover:bg-gray-100 border-gray-300'">
+          [ngClass]="theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 border-gray-600' : 'hover:bg-gray-100 border-gray-300'" style="background: linear-gradient(to right, #4a6cf7, #6366f1); border: none; color: #fff;">
           <i class="fas fa-plus h-5 w-5"></i>
           <span>New Chat</span>
         </button>
@@ -28,9 +28,9 @@
       
       <div class="flex-1 overflow-y-auto px-3 pb-3">
         <div *ngFor="let chat of chatHistory; let i = index" 
-             class="p-3 rounded-lg mb-2 cursor-pointer transition-all duration-200 animate-fadeIn"
-             [ngClass]="{'bg-gray-700': currentConversation === chat.title && theme === 'dark',
-                       'bg-gray-200': currentConversation === chat.title && theme === 'light',
+             class="p-3 rounded-lg mb-2 cursor-pointer transition-all duration-200 animate-fadeIn" style="cursor: pointer;"
+             [ngClass]="{'current-conversation-dark': currentConversation === chat.title && theme === 'dark',
+                       'current-conversation-light': currentConversation === chat.title && theme === 'light',
                        'hover:bg-gray-700': currentConversation !== chat.title && theme === 'dark',
                        'hover:bg-gray-200': currentConversation !== chat.title && theme === 'light'}"
              [style.animation-delay]="i * 50 + 'ms'"
@@ -51,16 +51,14 @@
       </div>
       
       <!-- User Controls -->
-      <div class="p-4 border-t" [ngClass]="theme === 'dark' ? 'border-gray-700' : 'border-gray-200'">
+      <div class="p-3 border-t" [ngClass]="theme === 'dark' ? 'border-gray-700' : 'border-gray-200'">
         <div class="p-3 rounded-lg flex justify-between items-center"
              [ngClass]="theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'">
           <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white font-medium">
-              U
-            </div>
-            <span class="text-sm font-medium">User</span>
+            <div class="user-avatar">L</div>
+            <span class="text-sm font-medium">Lokesh</span>
           </div>
-          <button 
+          <button style="display: none;"
             (click)="toggleTheme()" 
             class="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
             [ngClass]="theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'">
@@ -75,7 +73,7 @@
   <!-- Main Content -->
   <div class="flex-1 flex flex-col relative overflow-hidden">
     <!-- Header -->
-    <header class="flex items-center justify-between p-4 border-b transition-colors duration-300"
+    <header class="flex items-center justify-between p-3 border-b transition-colors duration-300"
             [ngClass]="theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'">
       <div class="flex items-center">
         <button 
@@ -87,25 +85,37 @@
           {{ currentConversation }}
         </h1>
       </div>
-      <div class="flex items-center space-x-3">
-        <button class="p-2 rounded-lg transition-colors duration-200"
+      <div class="flex items-center">
+        <button class="p-2 rounded-lg transition-colors duration-200" style="border: none; background: none;"
                 [ngClass]="theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-100'">
-          <i class="fas fa-share-alt h-5 w-5"></i>
+          <svg style="width: 20px; height: 20px" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
         </button>
-        <button class="p-2 rounded-lg transition-colors duration-200"
+        <button class="p-2 rounded-lg transition-colors duration-200" style="border: none; background: none;"
                 [ngClass]="theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-100'">
-          <i class="fas fa-bookmark h-5 w-5"></i>
+          <svg style="width: 20px; height: 20px" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
         </button>
-        <button class="p-2 rounded-lg transition-colors duration-200"
+        <button class="p-2 rounded-lg transition-colors duration-200" style="border: none; background: none;"
                 [ngClass]="theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-100'">
-          <i class="fas fa-download h-5 w-5"></i>
+          <svg style="width: 20px; height: 20px" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
         </button>
       </div>
     </header>
     
     <!-- Chat Area with transitions -->
     <div #messagesContainer
-      class="flex-1 overflow-y-auto p-4 transition-all duration-300"
+      class="flex-1 overflow-y-auto p-3 transition-all duration-300"
       [ngClass]="{'opacity-0': newChatTransition, 'opacity-100': !newChatTransition,
                 'bg-gray-900': theme === 'dark', 'bg-gray-50': theme === 'light'}"
       [style.background-image]="theme === 'dark' 
@@ -113,7 +123,7 @@
         : 'radial-gradient(circle at 10% 20%, rgba(245, 245, 245, 0.8) 0%, rgba(240, 240, 240, 0.8) 90.1%)'">
       <div class="max-w-3xl mx-auto space-y-6">
         <div *ngIf="showSuggestions" 
-             class="p-4 rounded-xl backdrop-blur shadow-lg animate-rise mb-8"
+             class="p-3 rounded-xl backdrop-blur shadow-lg animate-rise mb-8"
              [ngClass]="theme === 'dark' ? 'bg-gray-800/70 text-white' : 'bg-white/70 text-gray-800'">
           <h2 class="text-lg font-medium mb-3 flex items-center">
             <i class="fas fa-sparkles h-5 w-5 mr-2 text-blue-500"></i>
@@ -122,21 +132,21 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <button *ngFor="let suggestion of suggestions; let i = index"
               (click)="handleSuggestionClick(suggestion)"
-              class="p-3 rounded-lg text-left transition-all duration-300 group hover:scale-102 border"
+              class="p-3 rounded-lg text-left transition-all duration-300 group hover:scale-102 border suggestion-btn"
               [ngClass]="theme === 'dark' 
-                ? 'bg-gray-700/80 hover:bg-gray-600 border-gray-600' 
-                : 'bg-gray-100/80 hover:bg-gray-200 border-gray-300'"
+                ? 'bg-gray-700 hover:bg-gray-600 border-gray-600' 
+                : 'bg-gray-100 hover:bg-gray-200 border-gray-300'"
               [style.animation-delay]="i * 100 + 'ms'">
               <span>{{ suggestion }}</span>
             </button>
           </div>
         </div>
         
-        <div *ngFor="let message of messages" 
+        <div *ngFor="let message of messages" style="width: 100%;" 
              class="flex"
              [ngClass]="{'justify-end': message.sender === 'user', 'justify-start': message.sender === 'ai'}">
           <div 
-            class="rounded-xl p-4 shadow-md"
+            class="rounded-xl p-2 shadow-md" style="width: 100%;"
             [ngClass]="{
               'ml-10 text-white': message.sender === 'user',
               'mr-10': message.sender === 'ai',
@@ -148,14 +158,6 @@
               'message-slide-in': message.animationClass === 'message-slide-in'
             }">
             <div class="flex space-x-2 items-center mb-2">
-              <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs"
-                  [ngClass]="{
-                    'bg-blue-400 text-white': message.sender === 'user',
-                    'bg-indigo-600 text-white': message.sender === 'ai' && theme === 'dark',
-                    'bg-indigo-100 text-indigo-600': message.sender === 'ai' && theme === 'light'
-                  }">
-                {{ message.sender === 'user' ? 'U' : 'AI' }}
-              </div>
               <span class="text-sm font-medium"
                     [ngClass]="{
                       'text-blue-100': message.sender === 'user',
@@ -176,20 +178,17 @@
             
             <div class="prose max-w-none"
                  [ngClass]="{'prose-invert': theme === 'dark', 'prose-sm': true, 'thinking-animation': message.thinking}">
-              <div [innerHTML]="message.text | formatMessage"></div>
+              <div *ngIf="message.text" [innerHTML]="message.text | formatMessage" style="line-height: 1.8;"></div>
+              <app-chart *ngIf="message.graph" [graphData]="message.graph"></app-chart>
             </div>
             
           </div>
         </div>
         
         <div *ngIf="isThinking" class="flex justify-start">
-          <div class="rounded-xl p-4 shadow-md thinking-container"
+          <div class="rounded-xl p-2 shadow-md thinking-container"
                [ngClass]="theme === 'dark' ? 'bg-gray-800' : 'bg-white'">
             <div class="flex space-x-2 items-center mb-2">
-              <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs"
-                  [ngClass]="theme === 'dark' ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'">
-                AI
-              </div>
               <span class="text-sm font-medium"
                     [ngClass]="theme === 'dark' ? 'text-gray-300' : 'text-gray-700'">
                 Assistant
@@ -206,14 +205,14 @@
     </div>
     
     <!-- Input Area with Floating Design -->
-    <div class="relative p-4 transition-colors duration-300"
+    <div class="relative p-3 transition-colors duration-300"
          [ngClass]="theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'">
       <div class="max-w-3xl mx-auto">
         <div class="relative rounded-xl transition-opacity duration-300"
              [ngClass]="{'opacity-50 pointer-events-none': isProcessing, 'opacity-100': !isProcessing}">
           <textarea
             placeholder="Ask me anything..."
-            class="w-full p-4 pr-16 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border transition-colors duration-300"
+            class="w-full p-2 pr-16 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border transition-colors duration-300"
             [ngClass]="theme === 'dark' 
               ? 'bg-gray-800 text-white border-gray-700' 
               : 'bg-white text-gray-800 border-gray-200'"
@@ -223,7 +222,7 @@
             style="min-height: 60px; max-height: 200px"
             [disabled]="isProcessing">
           </textarea>
-          <button
+          <button style="border: none;"
             (click)="handleSendMessage()"
             [disabled]="!newMessage.trim() || isProcessing"
             class="absolute right-3 bottom-3 p-2 rounded-lg transition-all duration-300"

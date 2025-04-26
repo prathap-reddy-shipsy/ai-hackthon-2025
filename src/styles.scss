@@ -1,3 +1,6 @@
+body{
+  font-size: 13px;
+}
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -143,16 +146,16 @@
 .mt-3 { margin-top: 0.75rem; }
 
 .text-xs { font-size: 0.75rem; }
-.text-sm { font-size: 0.875rem; }
+.text-sm { font-size: 12px; }
 .text-lg { font-size: 1.125rem; }
 .font-medium { font-weight: 500; }
 .font-semibold { font-weight: 600; }
 .uppercase { text-transform: uppercase; }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.rounded { border-radius: 0.25rem; }
-.rounded-lg { border-radius: 0.5rem; }
-.rounded-xl { border-radius: 0.75rem; }
+.rounded { border-radius: 2px; }
+.rounded-lg { border-radius: 4px; }
+.rounded-xl { border-radius: 6px; }
 .rounded-full { border-radius: 9999px; }
 
 .border { border-width: 1px; }
@@ -161,7 +164,7 @@
 .border-b { border-bottom-width: 1px; }
 
 .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+.shadow-lg { box-shadow: 0 0px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
 
 .transition-all { transition-property: all; }
 .transition-colors { transition-property: background-color, border-color, color, fill, stroke; }
@@ -256,4 +259,52 @@
   .md\:max-w-2xl {
     max-width: 42rem;
   }
+}
+.current-conversation-light{
+  background-color: #eef2ff;
+  border-left: 4px solid #4f46e5;
+}
+.user-avatar {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: linear-gradient(to bottom right, #8b5cf6, #ec4899);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.suggestion-btn {
+  background: linear-gradient(to right, rgba(224, 231, 255, 0.5), rgba(199, 210, 254, 0.5));
+  border: 1px solid #ddd6fe;
+  transition: all 0.3s ease;
+  color: #1f2937;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.suggestion-btn:hover {
+  background: linear-gradient(to right, rgba(224, 231, 255, 0.8), rgba(199, 210, 254, 0.8));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.suggestion-btn:nth-child(2) {
+  background: linear-gradient(to right, rgba(237, 233, 254, 0.5), rgba(245, 208, 254, 0.5));
+  border-color: #e9d5ff;
+}
+
+.suggestion-btn:nth-child(2):hover {
+  background: linear-gradient(to right, rgba(237, 233, 254, 0.8), rgba(245, 208, 254, 0.8));
+}
+
+.suggestion-btn:nth-child(3) {
+  background: linear-gradient(to right, rgba(209, 250, 229, 0.5), rgba(167, 243, 208, 0.5));
+  border-color: #a7f3d0;
+}
+
+.suggestion-btn:nth-child(3):hover {
+  background: linear-gradient(to right, rgba(209, 250, 229, 0.8), rgba(167, 243, 208, 0.8));
 }
